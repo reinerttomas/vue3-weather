@@ -9,15 +9,20 @@
         class="py-2 px-1 w-full bg-transparent border-b focus:border-weather-secondary focus:outline-none focus:shadow-sm"
       />
       <ul
-        v-if="queryResults"
+        v-if="searchResults"
         class="absolute bg-weather-secondary text-white w-full shadow-md py-2 px-1 top-[66px]"
       >
+        <p v-if="searchError">Sorry, something went wrong, please try again.</p>
+        <p class="py-2" v-if="!searchError && searchResults.length === 0">
+          No results match your query, try a different term.
+        </p>
         <li
-          v-for="queryResult in queryResults"
-          :key="queryResult.id"
+          v-else
+          v-for="searchResult in searchResults"
+          :key="searchResult.id"
           class="py-2 cursor-pointer"
         >
-          {{ queryResult.place_name }}
+          {{ searchResult.place_name }}
         </li>
       </ul>
     </div>
@@ -29,25 +34,29 @@ import { ref } from 'vue';
 import axios from 'axios';
 
 const query = ref('');
-const queryTimeout = ref(null);
-const queryResults = ref(null);
+const searchTimeout = ref(null);
+const searchResults = ref(null);
+const searchError = ref(null);
 
 const mapboxGeocodingUrl = import.meta.env.VITE_MAPBOX_GEOCODING_URL;
 const mapboxGeocodingToken = import.meta.env.VITE_MAPBOX_GEOCODING_TOKEN;
 
 const getSearchResults = () => {
-  clearTimeout(queryTimeout.value);
+  clearTimeout(searchTimeout.value);
 
-  queryTimeout.value = setTimeout(async () => {
+  searchTimeout.value = setTimeout(async () => {
     if (query.value !== '') {
-      const result = await axios.get(
-        `${mapboxGeocodingUrl}/mapbox.places/${query.value}.json?access_token=${mapboxGeocodingToken}&types=place`
-      );
+      try {
+        const result = await axios.get(
+          `${mapboxGeocodingUrl}/mapbox.places/${query.value}.json?access_token=${mapboxGeocodingToken}&types=place`
+        );
 
-      queryResults.value = result.data.features;
-      console.log(queryResults.value);
+        searchResults.value = result.data.features;
+      } catch {
+        searchError.value = true;
+      }
     } else {
-      queryResults.value = null;
+      searchResults.value = null;
     }
   }, 300);
 };
