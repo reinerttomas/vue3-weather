@@ -21,6 +21,7 @@
           v-for="searchResult in searchResults"
           :key="searchResult.id"
           class="py-2 cursor-pointer"
+          @click="previewCity(searchResult)"
         >
           {{ searchResult.place_name }}
         </li>
@@ -31,6 +32,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const query = ref('');
@@ -59,5 +61,22 @@ const getSearchResults = () => {
       searchResults.value = null;
     }
   }, 300);
+};
+
+const router = useRouter();
+const previewCity = (searchResult) => {
+  const [city, state] = searchResult.place_name
+    .split(',')
+    .map((item) => item.trim());
+
+  router.push({
+    name: 'city',
+    params: { state: state, city: city },
+    query: {
+      longitude: searchResult.geometry.coordinates[0],
+      latitude: searchResult.geometry.coordinates[1],
+      preview: true,
+    },
+  });
 };
 </script>

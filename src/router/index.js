@@ -9,6 +9,11 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
+    {
+      path: '/weather/:state/:city',
+      name: 'city',
+      component: () => import('../views/CityView.vue'),
+    },
   ],
 });
 
