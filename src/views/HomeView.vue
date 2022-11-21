@@ -73,8 +73,8 @@ const previewCity = (searchResult) => {
     name: 'city',
     params: { state: state, city: city },
     query: {
-      longitude: searchResult.geometry.coordinates[0],
-      latitude: searchResult.geometry.coordinates[1],
+      lat: searchResult.geometry.coordinates[1],
+      lng: searchResult.geometry.coordinates[0],
       preview: true,
     },
   });
