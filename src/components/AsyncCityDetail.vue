@@ -115,7 +115,7 @@ const route = useRoute();
 const getWeatherData = async () => {
   try {
     const response = await axios.get(
-      `${openWeatherUrl}/onecall?lat=${route.query.lat}&lon=${route.query.lng}&appid=${openWeatherToken}&units=imperial`
+      `${openWeatherUrl}/data/3.0/onecall?lat=${route.query.lat}&lon=${route.query.lng}&appid=${openWeatherToken}&units=imperial`
     );
 
     // cal current date & time
@@ -137,5 +137,4 @@ const getWeatherData = async () => {
 };
 
 const weatherData = await getWeatherData();
-console.log(weatherData);
 </script>
