@@ -29,7 +29,7 @@ const getCities = async () => {
   cities.value.forEach((city) => {
     request.push(
       axios.get(
-        `${openWeatherUrl}/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=${openWeatherToken}&units=imperial`
+        `${openWeatherUrl}/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=${openWeatherToken}&units=metric`
       )
     );
   });
